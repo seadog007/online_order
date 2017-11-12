@@ -1,0 +1,34 @@
+<!--row-start-->
+  <div class="row justify-content-start">
+    <div class="col-6">
+      <label for="item_<?= item_1_id ?>"><?!= item_1_name ?></label>
+    </div>
+    <div class="col-6">
+      <label for="item_<?= item_2_id ?>"><?!= item_2_name ?></label>
+    </div>
+  </div>
+  <div class="row justify-content-start">
+    <div class="col-6">
+      <div class="input-group number-spinner">
+        <span class="input-group-btn">
+          <a class="btn btn-secondary disabled" data-dir="down" data-field="<?= item_1_id ?>"><i class="fa fa-minus" aria-hidden="true"></i></a>
+        </span>
+        <input type="text" readonly id="item_<?= item_1_id ?>" name="item_<?= item_1_id ?>" class="form-control text-center" value="0" max="10" min="0">
+        <span class="input-group-btn">
+          <a class="btn btn-secondary" data-dir="up" data-field="<?= item_1_id ?>"><i class="fa fa-plus" aria-hidden="true"></i></a>
+        </span>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="input-group number-spinner">
+        <span class="input-group-btn">
+          <a class="btn btn-secondary disabled" data-dir="down" data-field="<?= item_2_id ?>"><i class="fa fa-minus" aria-hidden="true"></i></a>
+        </span>
+        <input type="text" readonly id="item_<?= item_2_id ?>" name="item_<?= item_2_id ?>" class="form-control text-center" value="0" max="10" min="0">
+        <span class="input-group-btn">
+          <a class="btn btn-secondary" data-dir="up" data-field="<?= item_2_id ?>"><i class="fa fa-plus" aria-hidden="true"></i></a>
+        </span>
+      </div>
+    </div>
+  </div>
+<!--row-end-->

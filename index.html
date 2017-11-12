@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Snackfast - Online Ordering</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://v4-alpha.getbootstrap.com/assets/css/docs.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+      .form-control[readonly]{
+        background-color: #fff;
+      }
+      .btn-secondary.disabled{
+        background-color: #eee;
+      }
+      .number-spinner{
+        margin-bottom: 10px;
+      }
+      .number-spinner a{
+        cursor: pointer; /*fork you safari*/
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bd-pageheader">
+      <div class="container">
+        <h1>Snackfast</h1>
+        <h2 class="lead">Online Ordering</h2>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-10 col-md-8 col-lg-7 col-xl-5">
+
+          <form id="myform" onsubmit="submithandler(this)">
+            <div class="form-group">
+              <label for="email">Email address</label>
+              <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Enter email">
+              <small id="emailHelp" class="form-text text-muted">We'll send the confirmation to the email</small>
+            </div>
+
+            <div class="form-group">
+              <label for="name">What is your name?</label>
+              <input class="form-control" type="text" id="name" name="name" placeholder="Your name">
+            </div>
+
+            <!--rows-->
+            <?!= itemrows ?>
+            <!--rows-->
+
+            <div class="form-group">
+              <label for="pickup_date">Pickup Date:</label>
+              <input type="hidden" id="pickup_date" name="pickup_date">
+              <input class="form-control" type="date" id="pickup_date_" name="pickup_date_" disabled>
+              <small id="pickupHelp" class="form-text text-muted">It's only for tomorrow now</small>
+            </div>
+
+            <div class="form-group">
+              <label for="spr">Special requirements?</label>
+              <textarea class="form-control" id="spr" name="spr" rows="4"></textarea>
+            </div>
+
+            <hr>
+
+            <div class="row justify-content-end">
+                <div class="form-group">
+                  <input type="hidden" name="action" value="create_order">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+
+            <!--<div class="form-group">
+            </div>
+            <div class="form-group">
+            </div>-->
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="myModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Order detail</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p id="modal_text">Modal body text goes here.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="submit_order" onclick="realsubmit('myform')">Submit Order</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <!--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="https://momentjs.com/downloads/moment.min.js" crossorigin="anonymous"></script>
+    <script src="https://momentjs.com/downloads/moment-timezone-with-data.min.js" crossorigin="anonymous"></script>
+    <script>
+      pickup_date = moment(new Date()).add(1, 'day').tz('Asia/Taipei').format('YYYY-MM-DD');
+      var serviceUrl = <?= serviceUrl ?>;
+      var itemlist = JSON.parse(<?= itemlist ?>);
+      $('#pickup_date').val(pickup_date);
+      $('#pickup_date_').val(pickup_date);
+
+      String.prototype.replaceall = function(search, replacement) {
+        var target = this;
+        return target.replace(new RegExp(search, 'g'), replacement);
+      };
+
+      $(document).on('click', '.number-spinner a', function(){console.log('event');
+
+        var btn = $(this);
+        var input = btn.closest('.number-spinner').find('input');
+        var oldValue = input.val().trim();
+
+        if (btn.attr('data-dir') == 'up'){
+
+          if (oldValue < parseInt(input.attr('max'))){
+            oldValue++;
+          }
+          if (oldValue == parseInt(input.attr('max'))){
+            btn[0].classList.add('disabled');
+          }else{
+            $(".number-spinner a[data-dir='down'][data-field='" + btn.attr('data-field') + "']")[0].classList.remove('disabled');
+          }
+
+        }else{
+
+          if (oldValue > parseInt(input.attr('min'))){
+            oldValue--;
+          }
+          if (oldValue == parseInt(input.attr('min'))){
+            btn[0].classList.add('disabled');
+          }else{
+            $(".number-spinner a[data-dir='up'][data-field='" + btn.attr('data-field') + "']")[0].classList.remove('disabled');
+          }
+        }
+
+        input.val(oldValue);
+      });
+
+      function preventFormSubmit() {
+        var forms = document.querySelectorAll('form');
+        for (var i = 0; i < forms.length; i++) {
+          forms[i].addEventListener('submit', function(event) {
+            event.preventDefault();
+          });
+        }
+      }
+      window.addEventListener('load', preventFormSubmit);
+
+      function submithandler(form){
+        $('#email').parent()[0].classList.remove('has-danger')
+        $('#name').parent()[0].classList.remove('has-danger')
+
+        if (form.email.value == ""){
+          $('#email').parent()[0].classList.add('has-danger');
+          $('html, body').animate({
+            scrollTop: $("#email").offset().top - 50
+          }, 500);
+          return;
+        }
+        if (form.name.value == ""){
+          $('#name').parent()[0].classList.add('has-danger');
+          $('html, body').animate({
+            scrollTop: $("#name").offset().top - 50
+          }, 500);
+          return;
+        };
+
+        $('#email').parent()[0].classList.remove('has-danger');
+        $('#name').parent()[0].classList.remove('has-danger');
+
+        buyinglist = selectitems(form);
+        $('#modal_text').html(genlist(buyinglist) + '<br/><br/>Total: NT$ ' +  caltotal(buyinglist));
+        $('#myModal').modal('show');
+        return false;
+      }
+
+      function selectitems(form){
+        buyinglist = {};
+        for (var i in form){
+          if (parseInt(i) >= 0){
+		    if (form[i].name.startsWith('<?= itemprefix ?>') && form[i].value > 0){
+        	  buyinglist[form[i].name] = parseInt(form[i].value);
+		    }
+          }
+        }
+        return buyinglist;
+      }
+
+      function realsubmit(form){
+        formObject = $('#' + form)[0];
+        $('#submit_order')[0].classList.add('disabled');
+        google.script.run.withSuccessHandler(callback).processForm(formObject);
+      }
+
+      function callback(res){
+        if(res == 'done'){
+          $('#myModal').modal('hide');
+          google.script.run.withSuccessHandler(replacepage).confirmation_html();
+        }
+      }
+
+      function replacepage(res){
+        var newDoc = document.open("text/html", "replace");
+        newDoc.write(res);
+        newDoc.close();
+      }
+
+      function genlist(items){
+        var output = '';
+
+        for (var i in items){
+          item = finditem(i);
+          if (item != -1){
+            output += ' - ' + item.name.replaceall('<br/>', ' ') + ' *' +  items[i] + '<br/>';
+          }
+        }
+
+        output = output.substring(0, output.length - '<br/>'.length); // 移除最後一個換行
+        return output;
+      }
+
+      function finditem(id){
+        for (var i in itemlist){
+          if (<?= itemprefix ?> + itemlist[i].id == id){
+            return itemlist[i];
+          }
+        }
+        return -1;
+      }
+
+      function caltotal(items){
+        var total = 0;
+
+        for (var i in items){
+          item = finditem(i);
+          if (item != -1){
+            total += item.price * items[i];
+          }
+        }
+
+        return total;
+      }
+    </script>
+  </body>
+</html>
+
