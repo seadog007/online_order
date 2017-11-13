@@ -120,8 +120,7 @@
         return target.replace(new RegExp(search, 'g'), replacement);
       };
 
-      $(document).on('click', '.number-spinner a', function(){console.log('event');
-
+      $(document).on('click', '.number-spinner a', function(){
         var btn = $(this);
         var input = btn.closest('.number-spinner').find('input');
         var oldValue = input.val().trim();
@@ -227,7 +226,7 @@
         for (var i in items){
           item = finditem(i);
           if (item != -1){
-            output += ' - ' + item.name.replaceall('<br/>', ' ') + ' *' +  items[i] + '<br/>';
+            output += ' - ' + item.en_name + ' ' + item.ch_name + ' *' +  items[i] + '<br/>';
           }
         }
 
