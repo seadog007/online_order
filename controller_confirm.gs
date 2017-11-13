@@ -20,7 +20,8 @@ function route_confirm(e){
         sheet.appendRow([order_id,
                    new Date(data.createat),
                    genlist(data.items),
-                   data.total
+                   data.total,
+                   data.spr
                   ]);
 
         body_data = {
