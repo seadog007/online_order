@@ -17,11 +17,11 @@ function itemrows(){
 
       item_1 = items[i];
       page.item_1_id = item_1.id;
-      page.item_1_name = item_1.en_name + '<br/>' + item_1.ch_name;
+      page.item_1_name = item_1.en_name + '<br/>' + item_1.ch_name + ' NT$ ' + item_1.price;
 
       item_2 = items[i+1];
       page.item_2_id = item_2.id;
-      page.item_2_name = item_2.en_name + '<br/>' + item_2.ch_name;
+      page.item_2_name = item_2.en_name + '<br/>' + item_2.ch_name + ' NT$ ' + item_2.price;
 
       i++;
     }else{
@@ -29,7 +29,7 @@ function itemrows(){
 
       item_1 = items[i];
       page.item_1_id = item_1.id;
-      page.item_1_name = item_1.en_name + '<br/>' + item_1.ch_name;
+      page.item_1_name = item_1.en_name + '<br/>' + item_1.ch_name + ' NT$ ' + item_1.price;
 
     }
     page.itemprefix = itemprefix;
