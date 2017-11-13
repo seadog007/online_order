@@ -67,7 +67,7 @@ function genlist(items){
   for (var i = 2; i <= sheet.getLastRow(); i++){
     itemid = sheet.getRange(i, 1).getValue();
     if (items[itemid] > 0){ // 如果物品數量 > 0
-      output += ' - ' + sheet.getRange(i, 2).getValue() + ' *' +  items[itemid] + '\n'; // - 物品名稱 *物品數量
+      output += ' - ' + sheet.getRange(i, 2).getValue() + ' ' + sheet.getRange(i, 3).getValue() + ' *' +  items[itemid] + '\n'; // - 物品名稱 *物品數量
     }
   }
 
